@@ -30,13 +30,14 @@ class PostsTableSeeder extends Seeder
             // eseguo un ciclo while per verificare se ho trovato 2 slug uguali
             while($slug_exist){
                 // genero uno slag diverso
-                $slug = $slug_exist . '-' . $counter;
+                $slug = $slug_root . '-' . $counter;
                 $counter++;
                 $slug_exist = Post::where('slug',$slug)->first();
             }
 
             // esco dal ciclo e sono sicura che non ci sono 2 slug uguali
             // assegno uno slug univoco al post
+            $newPost->slug = $slug;
             $newPost->save();
         }
     }
