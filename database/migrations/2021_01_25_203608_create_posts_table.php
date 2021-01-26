@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->text('text');
             $table->date('date');
+            $table->string('slug')->unique();
 
         });
     }
