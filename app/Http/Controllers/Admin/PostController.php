@@ -52,7 +52,7 @@ class PostController extends Controller
 
 
 
-     public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post)
      {
 
       $form_data = $request->all();
@@ -79,4 +79,10 @@ class PostController extends Controller
       $post->update($form_data);
       return redirect()->route('admin.posts.index');
     }
+
+    public function destroy(Post $post)
+   {
+       $post->delete();
+       return redirect()->route('admin.posts.index');
+   }
 }
