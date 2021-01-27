@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use\App\Post;
+use\App\Category;
 
 class PostController extends Controller
 {
@@ -26,9 +27,27 @@ class PostController extends Controller
 
     }
 
+    public function create() {
+        $data = [
+            'categories'=>Category::all()
+        ];
+        return view('admin.posts.create', $data);
 
+    }
 
+    public function edit(Post $post)
+      {
+          if(!$post) {
+              abort(404);
+          }
 
+          $data = [
+              'post' => $post,
+              'categories' => Category::all()
+          ];
+
+          return view('admin.posts.edit', $data);
+      }
 
 
 }
