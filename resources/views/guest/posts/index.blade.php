@@ -1,10 +1,20 @@
-<h1>posts guest</h1>
-@foreach ($posts as $post)
-<p>{{$post->id}}</p>
-<p>{{$post->author}}</p>
-<p>{{$post->title}}</p>
-<p>{{$post->slug}}</p>
-<p>{{$post->date}}</p>
-<p>{{$post->text}}</p>
+@extends('layouts.app')
 
-@endforeach
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Tutti i post</h1>
+                <ul>
+                    @foreach ($posts as $post)
+                        <li>
+                            <a href="{{ route('posts.show', ['slug' => $post->slug]) }}">
+                                {{ $post->title }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+@endsection
