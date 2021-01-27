@@ -6,7 +6,7 @@
             <div class="col-12">
                 <h1>{{ $post->title }}</h1>
                 <div>
-                    {{ $post->content }}
+                    {{ $post->text }}
                 </div>
                 <p>Categoria: {{ $post->category ? $post->category->name : '-' }}</p>
             </div>
