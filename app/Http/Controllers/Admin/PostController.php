@@ -60,7 +60,7 @@ class PostController extends Controller
       if($form_data['title'] != $post->title) {
           // è stato modificato il titolo => devo modificare anche lo slug
        // Genero lo slug dal titolo ma..
-          $slug = Str::slug($newCategory->title);
+          $slug = Str::slug($form_data['title']);
           $slug_root = $slug;
           // lo slug potrebbe essere uguale ad un altro, quindi aggiungo controlli
           $slug_exist = Category::where('slug',$slug)->first();
@@ -85,4 +85,31 @@ class PostController extends Controller
        $post->delete();
        return redirect()->route('admin.posts.index');
    }
+
+   public function store(Request $request)
+{
+    $form_data = $request->all();
+    $new_post = new Post();
+    $new_post->fill($form_data);
+        // Genero lo slug dal titolo ma..
+        $slug = Str::slug($newPost->title);
+        $slug_root = $slug;
+        // lo slug potrebbe essere uguale ad un altro, quindi aggiungo controlli
+        $slug_exist = Post::where('slug',$slug)->first();
+        $counter= 1;
+        // eseguo un ciclo while per verificare se ho trovato 2 slug uguali
+        while($slug_exist){
+            // genero uno slag diverso
+            $slug = $slug_root . '-' . $counter;
+            $counter++;
+            $slug_exist = Post::where('slug',$slug)->first();
+                }
+    // quando esco dal while sono sicuro che lo slug non esiste nel db
+    // assegno lo slug al post
+        $new_post->slug = $slug;
+        $new_post->save();
+        return redirect()->route('admin.posts.index');
+}
+
+
 }
