@@ -19,13 +19,13 @@
                     @endif
 
                 </p>
-                <p>Tags:
+                {{-- <p>Tags:
                     @forelse ($post->tags as $tag)
                         {{$tag->name}}{{!$loop->last ? ',':''}}
                     @empty
                         -
                     @endforelse
-                </p>
+                </p> --}}
             </div>
         </div>
     </div>

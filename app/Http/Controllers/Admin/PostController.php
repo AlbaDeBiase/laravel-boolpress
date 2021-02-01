@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use\App\Post;
 use\App\Category;
+use\App\Tag;
 
 class PostController extends Controller
 {
@@ -30,7 +31,8 @@ class PostController extends Controller
 
     public function create() {
         $data = [
-            'categories'=>Category::all()
+            'categories'=> Category::all(),
+            'tags'=> Tag::all()
         ];
         return view('admin.posts.create', $data);
 
@@ -44,7 +46,8 @@ class PostController extends Controller
 
           $data = [
               'post' => $post,
-              'categories' => Category::all()
+              'categories' => Category::all(),
+              'tags'=> Tag::all()
           ];
 
           return view('admin.posts.edit', $data);
@@ -92,7 +95,7 @@ class PostController extends Controller
     $new_post = new Post();
     $new_post->fill($form_data);
         // Genero lo slug dal titolo ma..
-        $slug = Str::slug($newPost->title);
+        $slug = Str::slug($new_post->title);
         $slug_root = $slug;
         // lo slug potrebbe essere uguale ad un altro, quindi aggiungo controlli
         $slug_exist = Post::where('slug',$slug)->first();

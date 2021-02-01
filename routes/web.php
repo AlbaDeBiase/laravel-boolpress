@@ -19,7 +19,7 @@ Route::get('/posts','PostController@index')->name('posts.index');
 Route::get('/posts/{slug}','PostController@show')->name('posts.show');
 Route::get('/categories/{slug}','CategoryController@show')->name('categories.show');
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
 Route::middleware('auth')->prefix('admin')->namespace('Admin')->name('admin.')->group(function(){
 
