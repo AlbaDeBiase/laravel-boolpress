@@ -18,17 +18,6 @@ class PostController extends Controller
         return view('admin.posts.index', $data);
     }
 
-    public function show($slug) {
-        $post= Post::where('slug', $slug)->first();
-        if(!$post) {
-            abort(404);
-        }
-
-        $data = ['post'=>$post];
-        return view('guest.posts.show', $data);
-
-    }
-
     public function create() {
         $data = [
             'categories'=> Category::all(),
@@ -37,6 +26,56 @@ class PostController extends Controller
         return view('admin.posts.create', $data);
 
     }
+
+    public function store(Request $request)
+ {
+     $request->validate([
+         'title'=>'required|unique:posts|max:255',
+         'text'=>'required',
+         'category_id'=>'nullable|exists:categories,id',
+         'tags'=>'nullable|exists:tags,id',
+     ]);
+     $form_data = $request->all();
+     $new_post = new Post();
+     $new_post->fill($form_data);
+         // Genero lo slug dal titolo ma..
+         $slug = Str::slug($new_post->title);
+         $slug_root = $slug;
+         // lo slug potrebbe essere uguale ad un altro, quindi aggiungo controlli
+         $slug_exist = Post::where('slug',$slug)->first();
+         $counter= 1;
+         // eseguo un ciclo while per verificare se ho trovato 2 slug uguali
+         while($slug_exist){
+             // genero uno slag diverso
+             $slug = $slug_root . '-' . $counter;
+             $counter++;
+             $slug_exist = Post::where('slug',$slug)->first();
+                 }
+     // quando esco dal while sono sicuro che lo slug non esiste nel db
+     // assegno lo slug al post
+         $new_post->slug = $slug;
+         $new_post->save();
+         // verifico se esiste la chiave tags
+         if(array_key_exists('tags', $form_data)) {
+             // aggiungo i tag al post
+             $new_post->tags()->sync($form_data['tags']);
+         }
+
+         return redirect()->route('admin.posts.index');
+ }
+
+
+    public function show(Post $post) {
+
+        if(!$post) {
+            abort(404);
+        }
+
+        return view('admin.posts.show', ['post' =>$post]);
+
+    }
+
+
 
     public function edit(Post $post)
       {
@@ -98,46 +137,12 @@ class PostController extends Controller
 
     public function destroy(Post $post)
    {
+
+       $post->tags()->sync([]);
        $post->delete();
        return redirect()->route('admin.posts.index');
    }
 
-   public function store(Request $request)
-{
-    $request->validate([
-        'title'=>'required|unique:posts|max:255',
-        'text'=>'required',
-        'category_id'=>'nullable|exists:categories,id',
-        'tags'=>'nullable|exists:tags,id',
-    ]);
-    $form_data = $request->all();
-    $new_post = new Post();
-    $new_post->fill($form_data);
-        // Genero lo slug dal titolo ma..
-        $slug = Str::slug($new_post->title);
-        $slug_root = $slug;
-        // lo slug potrebbe essere uguale ad un altro, quindi aggiungo controlli
-        $slug_exist = Post::where('slug',$slug)->first();
-        $counter= 1;
-        // eseguo un ciclo while per verificare se ho trovato 2 slug uguali
-        while($slug_exist){
-            // genero uno slag diverso
-            $slug = $slug_root . '-' . $counter;
-            $counter++;
-            $slug_exist = Post::where('slug',$slug)->first();
-                }
-    // quando esco dal while sono sicuro che lo slug non esiste nel db
-    // assegno lo slug al post
-        $new_post->slug = $slug;
-        $new_post->save();
-        // verifico se esiste la chiave tags
-        if(array_key_exists('tags', $form_data)) {
-            // aggiungo i tag al post
-            $new_post->tags()->sync($form_data['tags']);
-        }
-
-        return redirect()->route('admin.posts.index');
-}
 
 
 }
