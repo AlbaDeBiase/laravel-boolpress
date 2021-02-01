@@ -58,6 +58,12 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
      {
 
+     $request->validate([
+         'title'=>'required|unique:posts|max:255',
+         'text'=>'required',
+         'category_id'=>'nullable|exists:categories,id',
+         'tags'=>'nullable|exists:tags,id',
+     ]);
       $form_data = $request->all();
       // verifico se il titolo ricevuto dal form è diverso dal vecchio titolo
       if($form_data['title'] != $post->title) {
@@ -66,20 +72,27 @@ class PostController extends Controller
           $slug = Str::slug($form_data['title']);
           $slug_root = $slug;
           // lo slug potrebbe essere uguale ad un altro, quindi aggiungo controlli
-          $slug_exist = Category::where('slug',$slug)->first();
+          $slug_exist = Post::where('slug',$slug)->first();
           $counter= 1;
           // eseguo un ciclo while per verificare se ho trovato 2 slug uguali
           while($slug_exist){
               // genero uno slag diverso
               $slug = $slug_root . '-' . $counter;
               $counter++;
-              $slug_exist = Category::where('slug',$slug)->first();
+              $slug_exist = Post::where('slug',$slug)->first();
             }
           // quando esco dal while sono sicuro che lo slug non esiste nel db
           // assegno lo slug al post
           $form_data['slug'] = $slug;
+
         }
       $post->update($form_data);
+
+
+   if(array_key_exists('tags', $form_data)) {
+            // aggiungo i tag al post
+            $post->tags()->sync($form_data['tags']);
+        }
       return redirect()->route('admin.posts.index');
     }
 
@@ -91,6 +104,12 @@ class PostController extends Controller
 
    public function store(Request $request)
 {
+    $request->validate([
+        'title'=>'required|unique:posts|max:255',
+        'text'=>'required',
+        'category_id'=>'nullable|exists:categories,id',
+        'tags'=>'nullable|exists:tags,id',
+    ]);
     $form_data = $request->all();
     $new_post = new Post();
     $new_post->fill($form_data);
@@ -111,6 +130,12 @@ class PostController extends Controller
     // assegno lo slug al post
         $new_post->slug = $slug;
         $new_post->save();
+        // verifico se esiste la chiave tags
+        if(array_key_exists('tags', $form_data)) {
+            // aggiungo i tag al post
+            $new_post->tags()->sync($form_data['tags']);
+        }
+
         return redirect()->route('admin.posts.index');
 }
 

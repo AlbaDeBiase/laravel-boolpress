@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label>Contenuto</label>
-                    <textarea name="content" class="form-control" rows="10" placeholder="Inizia a scrivere qualcosa..." required></textarea>
+                    <textarea name="text" class="form-control" rows="10" placeholder="Inizia a scrivere qualcosa..." required></textarea>
                 </div>
                 <div class="form-group">
                     <label>Categoria</label>
