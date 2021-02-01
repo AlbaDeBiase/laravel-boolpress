@@ -27,14 +27,14 @@
                 @csrf
                 <div class="form-group">
                     <label>Titolo</label>
-                    <input type="text" name="title" class="form-control" placeholder="Inserisci il titolo" maxlength="255" required>
+                    <input type="text" name="title" class="form-control" placeholder="Inserisci il titolo" value="{{ old('title', $post->title) }}" required>
                     @error('title')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label>Contenuto</label>
-                    <textarea name="text" class="form-control" rows="10" placeholder="Inizia a scrivere qualcosa..." required></textarea>
+                    <textarea name="text" class="form-control" rows="10" placeholder="Inizia a scrivere qualcosa..." required>{{ old('text', $post->content) }}</textarea>
                     @error('text')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
