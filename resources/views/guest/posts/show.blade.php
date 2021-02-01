@@ -7,7 +7,7 @@
             <div class="col-12">
                 <h1>{{ $post->title }}</h1>
                 <div>
-                    {{ $post->content }}
+                    {{ $post->text }}
                 </div>
                 <p>Categoria:
                     @if ($post->category)
@@ -19,13 +19,13 @@
                     @endif
 
                 </p>
-                {{-- <p>Tags:
+                <p>Tags:
                     @forelse ($post->tags as $tag)
                         {{$tag->name}}{{!$loop->last ? ',':''}}
                     @empty
                         -
                     @endforelse
-                </p> --}}
+                </p>
             </div>
         </div>
     </div>

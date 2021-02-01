@@ -4,15 +4,27 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1>{{ $category->name }}</h1>
-                <ul>
-                    @foreach ($category->posts as $post)
-                        <li>
-                            <a href="{{ route('posts.show', ['slug'=> $post->slug])}}">
-                                {{$post->title}}
-                            </a>
-                        </li>
-                    @endforeach
+                <h1>{{$post->title}}</h1>
+                <div>
+                    {{$post->text}}
+                </div>
+                <p>Categoria:
+                    @if ($post->category)
+                        <a href="{{route('categories.show',['slug'=> $post->category->slug])}}">
+                            {{$post->category->name}}
+                        </a>
+                    @else
+                        -
+
+                    @endif
+                </p>
+                <p>Tags:
+                    @forelse ($post->tags as $tag)
+                        {{$tag->name}}{{$loop->last ? ',' :''}}
+                    @empty
+                        -
+                    @endforelse
+                </p>
                 </ul>
             </div>
         </div>
