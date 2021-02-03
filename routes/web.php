@@ -25,4 +25,6 @@ Route::middleware('auth')->prefix('admin')->namespace('Admin')->name('admin.')->
 
     Route::get('/', 'HomeController@index')->name('index');
     Route::resource('/posts', 'PostController');
+    Route::get('/profile','HomeController@profile')->name('profile');
+    Route::post('/profile/generate-token','HomeController@generateToken')->name('generate_token');
 });
